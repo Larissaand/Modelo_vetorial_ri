@@ -56,21 +56,22 @@ def tokenize(palavra):
 
 class Wand(object):
     def __init__(self):
-        infile = open('dumps/dictionary','rb')
+        infile = open('dumps/dictionary_lemmatized','rb')
         self.dict = pickle.load(infile)
         infile.close()
-
+        
         infile = open('dumps/post_w','rb')
         self.post_list = pickle.load(infile)
         infile.close()
 
-        infile = open('dumps/idf','rb')
+        infile = open('dumps/idf_lem','rb')
         self.idf = pickle.load(infile)
         infile.close()
 
         infile = open('dumps/norma_doc','rb')
         self.norma_doc = pickle.load(infile)
         infile.close()
+
 
     def post(self, token):
          return self.post_list[self.dict[token]][1::]
@@ -110,8 +111,8 @@ class Wand(object):
             if token in self.dict:
                 l = self.post(token)
                 if len(l) > 65:
-                    listas[token] = l[1:65:]
-                    listas2[token] = l[65::]
+                    listas[token] = l[1:66:]
+                    listas2[token] = l[66::]
                 else:
                     listas[token] = l
 

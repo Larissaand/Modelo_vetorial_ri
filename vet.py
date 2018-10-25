@@ -2,41 +2,12 @@ import unicodedata
 import re
 import heapq
 import pickle
-import nltk
-from nltk.stem import WordNetLemmatizer
-from nltk import pos_tag, word_tokenize
-
-try:
-    t = word_tokenize('dog')
-except:
-    nltk.download('punkt')
-    nltk.download('averaged_perceptron_tagger')
-    nltk.download('wordnet')
-
-def postag(word):
-    p = pos_tag(word_tokenize(word))
-    return p[0][1]
-
-def lemmatize(word):
-    lemmatizer = WordNetLemmatizer()
-    p = postag(word)
-    if (p[0]=='J'):
-         p= 'a'
-    elif (p[0]=='V'):
-        p= 'v'
-    elif (p[0]=='N'):
-        p= 'n'
-    elif (p[0]=='R'):
-        p= 'r'
-    else:
-        p= 'n'
-    return lemmatizer.lemmatize(word,pos=p)
 
 def tokenize(palavra):
     palavra = palavra.lower()
     nfkd = unicodedata.normalize('NFKD', palavra)
     token = u"".join([c for c in nfkd if not unicodedata.combining(c)])
-    return [lemmatize(w) for w in re.sub('[^a-z0-9 \\\]', '', token).split(' ') if len(w) > 0]
+    return re.sub('[^a-z0-9 \\\]', '', token).split(' ')
 
 class Vetorial(object):
     def __init__(self):
@@ -136,12 +107,7 @@ class Vetorial(object):
                 soma = soma + self.idf[token]*self.idf[token]*freq_retirado*tokens_sr[token]
             else:
                 similaridade = soma/self.norma_doc[id_doc]
-                if similaridade > 3.0:
-                    entrada_heap_simi = 3.0, id_doc
-                elif similaridade < 0.5:
-                    entrada_heap_simi = 0.5, id_doc
-                else:
-                    entrada_heap_simi = similaridade, id_doc
+                entrada_heap_simi = similaridade, id_doc
 
                 if len(heap_simi) < 20:
                     heapq.heappush(heap_simi, entrada_heap_simi)
@@ -156,12 +122,7 @@ class Vetorial(object):
                 soma = self.idf[token]*self.idf[token]*freq_retirado*tokens_sr[token]
 
         similaridade = soma/self.norma_doc[id_doc]
-        if similaridade > 3.0:
-            entrada_heap_simi = 3.0, id_doc
-        elif similaridade < 0.5:
-            entrada_heap_simi = 0.5, id_doc
-        else:
-            entrada_heap_simi = similaridade, id_doc
+        entrada_heap_simi = similaridade, id_doc
 
         if len(heap_simi) < 20:
             heapq.heappush(heap_simi, entrada_heap_simi)

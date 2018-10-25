@@ -36,11 +36,11 @@ def tokenize(palavra):
     palavra = palavra.lower()
     nfkd = unicodedata.normalize('NFKD', palavra)
     token = u"".join([c for c in nfkd if not unicodedata.combining(c)])
-    return [lemmatize(w) for w in re.sub('[^a-z0-9 \\\]', '', token).split(' ') if len(w) > 0]
+    return [lemmatize(w) for w in re.sub('[^a-z0-9 \\\]', '', token).split(' ') if len(w) > 1]
 
 class Busca(object):
     def __init__(self):
-        infile = open('dumps/dictionary','rb')
+        infile = open('dumps/dictionary_lemmatized','rb')
         self.dict = pickle.load(infile)
         infile.close()
         
@@ -48,7 +48,7 @@ class Busca(object):
         self.post_list = pickle.load(infile)
         infile.close()
 
-        infile = open('dumps/idf','rb')
+        infile = open('dumps/idf_lem','rb')
         self.idf = pickle.load(infile)
         infile.close()
 
