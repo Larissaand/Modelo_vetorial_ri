@@ -2,6 +2,7 @@ import unicodedata
 import re
 import heapq
 import pickle
+from score import ModelScore
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
@@ -78,6 +79,7 @@ class Busca(object):
             return False
 
     def consulta(self):
+        _S = ModelScore()
         print("Digite uma consulta:\n(Digite q para sair)")
         query = input()
         while query != 'q':
@@ -86,9 +88,11 @@ class Busca(object):
             for i in relevantes:
                 similaridade, id_doc = i
                 print('id_doc:', id_doc, 'similaridade:', similaridade)
+            _S.tl(query, relevantes)
             print('\n')
             print("Digite uma nova consulta:\n(Digite q para sair)")
             query = input()
+        _S.mrr()
             
 
     def busca(self, tokens):

@@ -2,6 +2,7 @@ from lista_invertida import ListaInvertida
 from busca import Busca
 from dumps import tokenize, lemmatize
 from wand import Wand
+from score import ModelScore
 from vet import Vetorial
 import timeit
 
@@ -26,6 +27,7 @@ def main():
     _M = Busca()
     _W = Wand()
     _V = Vetorial()
+    _S = ModelScore()
     print('Digite "c" para fazer uma consulta.')
     print('Acrescente "t" para contar o tempo de execução.')
     print('Acrescente "w" para usar o algoritmo wand.')
@@ -39,19 +41,19 @@ def main():
             print("(Digite q para cancelar)")
             query = input()
             while query != 'q':
-            	tokens = [lemmatize(w) for w in tokenize(query).split(' ') if len(w) > 1]
-            	print(tokens)
-            	relevantes = _W.wand(tokens)
+            	relevantes = _W.wand([lemmatize(w) for w in tokenize(query).split(' ') if len(w) > 1])
             	for i in relevantes:
             		id_doc, similaridade = i
             		print('id_doc:', id_doc, 'similaridade:', similaridade)
             	w = wrapper(Wand.wand, _W, query)
             	time = timeit.timeit(w, number=1)
             	print('\nSua consulta demorou:', time, "s")
+            	_S.tl(query, relevantes, t='w')
             	print('\n')
             	print("Digite uma nova consulta:")
             	print("(Digite 'q' para sair ou trocar de algoritmo)")
             	query = input()
+            _S.mrr()
 
         elif 'w' in p and 'c' in p:
             _W.consulta()
@@ -68,10 +70,12 @@ def main():
                 w = wrapper(Busca.busca, _V, query)
                 time = timeit.timeit(w, number=1)
                 print('\nSua consulta demorou:', time, "s")
+                _S.tl(query, relevantes)
                 print('\n')
                 print("Digite uma nova consulta:")
                 print("(Digite 'q' para sair ou trocar de algoritmo)")
                 query = input()
+            _S.mrr()            
 
         elif 'v' in p and 'c' in p:
             _V.consulta()
@@ -88,10 +92,12 @@ def main():
                 w = wrapper(Busca.busca, _M, query)
                 time = timeit.timeit(w, number=1)
                 print('\nSua consulta demorou:', time, "s")
+                _S.tl(query, relevantes)
                 print('\n')
                 print("Digite uma nova consulta:")
                 print("(Digite 'q' para sair ou trocar de algoritmo)")
                 query = input()
+            _S.mrr()
                       
         elif 'c' in p:
             _M.consulta()

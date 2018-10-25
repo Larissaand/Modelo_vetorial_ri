@@ -2,6 +2,7 @@ import unicodedata
 import re
 import heapq
 import pickle
+from score import ModelScore
 
 def tokenize(palavra):
     palavra = palavra.lower()
@@ -49,6 +50,7 @@ class Vetorial(object):
             return False
 
     def consulta(self):
+        _S = ModelScore()
         print("Digite uma consulta:\n(Digite q para sair)")
         query = input()
         while query != 'q':
@@ -57,9 +59,11 @@ class Vetorial(object):
             for i in relevantes:
                 similaridade, id_doc = i
                 print('id_doc:', id_doc, 'similaridade:', similaridade)
+            _S.tl(query, relevantes)
             print('\n')
             print("Digite uma nova consulta:\n(Digite q para sair)")
             query = input()
+        _S.mrr()
             
 
     def busca(self, tokens):

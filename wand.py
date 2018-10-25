@@ -3,6 +3,7 @@ import re
 from heap import myheap
 import heapq
 import pickle
+from score import ModelScore
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag, word_tokenize
@@ -77,6 +78,7 @@ class Wand(object):
          return self.post_list[self.dict[token]][1::]
 
     def consulta(self):
+        _S = ModelScore()
         print("Digite uma consulta:\n(Digite q para sair)")
         query = input()
         while query != 'q':
@@ -85,9 +87,11 @@ class Wand(object):
             for i in relevantes:
                 id_doc, similaridade = i
                 print('id_doc:', id_doc, 'similaridade:', similaridade)
+            _S.tl(query, relevantes, t='w')
             print('\n')
             print("Digite uma nova consulta:\n(Digite q para sair)")
             query = input()
+        _S.mrr()
 
     def wand(self, tokens):
         tokens_sr = {}
